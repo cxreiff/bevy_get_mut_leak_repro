@@ -33,24 +33,24 @@ fn setup(mut commands: Commands, mut meshes: ResMut<Assets<Mesh>>) {
     commands.spawn(Mesh2d(meshes.add(mesh)));
 }
 
-fn update(mut q_term: Query<&Mesh2d>, mut meshes: ResMut<Assets<Mesh>>) {
-    for mesh_handle in &mut q_term {
-        let mesh = meshes
-            .get_mut(&mesh_handle.0.clone())
-            .expect("Error getting terminal mesh");
+fn update(mut q_mesh_handle: Query<&Mesh2d>, mut meshes: ResMut<Assets<Mesh>>) {
+    let mesh_handle = q_mesh_handle.single_mut().unwrap();
 
-        let tile_count = 90_000;
+    let mesh = meshes
+        .get_mut(&mesh_handle.0)
+        .expect("Error getting terminal mesh");
 
-        let Some(Indices::U32(indices)) = mesh.indices_mut() else {
-            panic!();
-        };
-        indices.resize(tile_count * 6, 0);
+    let tile_count = 90_000;
 
-        let Some(VertexAttributeValues::Float32x3(verts)) =
-            mesh.attribute_mut(Mesh::ATTRIBUTE_POSITION)
-        else {
-            panic!();
-        };
-        verts.resize(tile_count * 4, [0.0; 3]);
-    }
+    let Some(Indices::U32(indices)) = mesh.indices_mut() else {
+        panic!();
+    };
+    indices.resize(tile_count * 6, 0);
+
+    let Some(VertexAttributeValues::Float32x3(verts)) =
+        mesh.attribute_mut(Mesh::ATTRIBUTE_POSITION)
+    else {
+        panic!();
+    };
+    verts.resize(tile_count * 4, [0.0; 3]);
 }
